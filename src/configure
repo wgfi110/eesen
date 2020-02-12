@@ -552,7 +552,7 @@ function linux_configure_dynamic {
   # The Lapack part of ATLAS seems to appear under various different names.. but it
   # should always have symbols like ATL_cgetrf defined, so we test for this,
   # for all the names we have encountered.
-  for libname in lapack lapack_atlas  clapack; do
+  for libname in lapack lapack_atlas  clapack atlas; do
     if [ -f $ATLASLIBDIR/lib${libname}.so -a "$ATLASLIBS" == "" ]; then
       if nm  --dynamic $ATLASLIBDIR/lib${libname}.so  | grep ATL_cgetrf >/dev/null; then
          ATLASLIBS="$ATLASLIBDIR/lib${libname}.so"
@@ -565,13 +565,6 @@ function linux_configure_dynamic {
     return 1;
   fi
    
-  for x in ${pt}cblas atlas ${pt}f77blas; do
-    if [ ! -f $ATLASLIBDIR/lib$x.so ]; then
-      echo "Configuring dynamic ATLAS libraries failed: Could not find library $x in directory $ATLASLIBDIR"
-      return 1;
-    fi
-    ATLASLIBS="$ATLASLIBS $ATLASLIBDIR/lib${x}.so"
-  done
   if $threaded_atlas; then ATLASLIBS="$ATLASLIBS"; fi
 
   echo ATLASINC = $ATLASROOT/include >> config.mk
